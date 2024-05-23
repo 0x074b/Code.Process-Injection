@@ -18,3 +18,13 @@
 
 # New PE Code Section
 *I randomly chose Bginfo.exe from sysinternals as a binary to be backdoored. Let's add a new PE section called  that will contain our shellcode - note the size is 200h bytes, so plenty for our shellcode which was only 324 bytes:*```.code1```
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/cbd3afd7-743d-4fb5-8229-f9e1e603967a)
+
+*Note the Raw Address of the new section which is CD200 - this is where we will place the shellcode inside the file in later steps.*
+
+*Let's make the new PE section writable/executable and mark it as  using CFF Explorer:*```contains code```
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/716391fe-41a2-4726-8d45-cda36285d1f8)
+
+
