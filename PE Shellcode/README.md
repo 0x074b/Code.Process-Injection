@@ -70,9 +70,15 @@
 
 *6. Note the ESP value and the end of shellcode execution - this is related to point 4 and 7*
 
-*7. Restore the stack pointer ESP to what it was after the shellcode executed ```pushad``` and ```pushfd``` as explained in step 3, with . This is where ESPs from point 4 and 7 comes in to play*```add esp, <ESP_POST_SHELLCODE - ESP_PRE_SHELLCODE>```
+*7. Restore the stack pointer ESP to what it was after the shellcode executed ```pushad``` and ```pushfd``` as explained in step 3, with . This is where ESPs from point 4 and 7 comes in to play* ```add esp, <ESP_POST_SHELLCODE - ESP_PRE_SHELLCODE>```
 
 *8. Restore registers with ```popfd``` and ```popad```*
+
+*9. Append the shellcode with the instruction we had overwritten in step 1*
+
+*10. Restore code execution back to bginfo by jumping back to the next instruction after the owerwritten one as explained in 1.3*
+
+# Overwriting 5 byte Instruction
 
 
 
