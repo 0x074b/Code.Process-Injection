@@ -3,13 +3,9 @@
 
 *High level process of this technique*:
 
-*-Add a new RWX PE section, big enough to hold our shellcode, to any .exe file*
-
-*-Generate shellcode*
-
-*-Add shellcode to the newly created PE section*
-
-*-Redirect execution flow of the .exe file being backdoored to the shellcode*
-
-*-Redirect execution flow back to the legitimate .exe instructions*
+*-Add a new RWX PE section, big enough to hold our shellcode, to any .exe file*  
+*-Generate shellcode*  
+*-Add shellcode to the newly created PE section*  
+*-Redirect execution flow of the .exe file being backdoored to the shellcode*  
+*-Redirect execution flow back to the legitimate .exe instructions*  
 
