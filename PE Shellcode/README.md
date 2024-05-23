@@ -80,6 +80,35 @@
 
 # Overwriting 5 byte Instruction
 
+*Let's now hijack the bginfo.exe code execution flow by overwriting any instruction that is 5 bytes in size - again - this is how many bytes we need for a ```jmp address``` instruction.*
+
+*One of the first 5-byte instructions we can see is ```mov edi, bb40e64e``` at 00467b29:*  
+*/!\ Important
+We are about to overwrite the instruction ```mov edi, 0xbb40e64e``` at 00467b29, hence we need to remember it for later as explained in 1.2.*
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/7214612e-9786-4419-b82c-a822d84465d3)
+
+*Let's overwrite the instruction at 00467b29 with an instruction ```jmp 0x004d8000````which will make the bginfo jump to our shellcode located at 0x004d8000 when executed:*
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/894398fd-0cbd-4ae9-a1c4-06214b66d6fd)
+
+*/!\ Important
+Remember the address of the next instruction after 0046b29, which is 0467b2e - this is the address we will jump back after the shellcode has executed in order to resume bginfo.*
+
+*There are multiple ways to overwrite the instructions at 00467b29 - either assemble the bytes using a debugger or patch the binary via a hex editor which is what I did. I found the bytes ```bf 4e e6 40 bb``` (bytes found at 00467b29 when bginfo is in memory) in the bginfo.exe (screenshot below) and replaced them with bytes ```e9 d2 04 07 00``` which translates to jmp ```bgfinfo.d48000``` (jump to our shellcode, above screenshot).*
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/be4cb830-3d6a-44ad-ad9e-31734d5dcf52)
+
+*Below shows how the code redirection works and we jump to 4d8000 (shellcode) location once we hit the instruction at 00467b29:*
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/c23f99af-ba16-4ae6-8798-66fa4e7a8657)
+
+*If we try running the patched binary now, we can see it results in a reverse shell, however the bginfo.exe itself is not visible - we will need to fix that:*
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/b46499da-d3ac-41f0-a283-cb7433df9313)
+
+# Patching Shellcode
+
 
 
 
