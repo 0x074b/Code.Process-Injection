@@ -54,10 +54,26 @@
 *The process of patching the binary to redirect the code execution flow is as follows:*
 
 *1. Find the first instruction that is 5 bytes in size inside the bginfo.exe binary*  
-    *1. We will overwrite this instruction with a jump to the shellcode as explained in step 2*  
-    *2. Prior to overwriting this instruction, write it down somewhere - we will need to append it to our shellcode later in order to restore the code   execution flow*  
-    *2. Write down the address of the next instruction to be executed next - after the shellcode has been executed, stack and registers restored, we     will jump back to this address to let the bginfo.exe continue as normal*  
+*1.1 We will overwrite this instruction with a jump to the shellcode as explained in step 2*  
+*1.2 Prior to overwriting this instruction, write it down somewhere - we will need to append it to our shellcode later in order to restore the code   execution flow*  
+*1.3 Write down the address of the next instruction to be executed next - after the shellcode has been executed, stack and registers restored, we will jump back to this address to let the bginfo.exe continue as normal*  
+
 *2. Overwrite the instruction in step 1 with a jump to the shellcode at 4D8000‬*  
+
+*3. Save registers' and flags' state by prepending the shellcode with ```pushad``` and ```pushfd``` instructions - we do this so we can restore their state before redirecting the execution back to bginfo.exe and avoid any crashes*  
+
+*4. Remember the ESP register value - we will need this when calculating by how much the stack size grew during the shellcode execution. This is required in order to restore the stack frame before redirecting the code execution back to bginfo.exe*
+
+*5. Modify the shellcode:*  
+*5.1 Make sure that ```WaitForSingleObject``` does not wait indefinitely and does not freeze bginfo.exe once the shellcode is executed*  
+*5.2 Remove the last instruction of the shellcode ```call ebp``` to prevent the shellcode from shutting down of bginfo.exe*
+
+*6. Note the ESP value and the end of shellcode execution - this is related to point 4 and 7*
+
+*7. Restore the stack pointer ESP to what it was after the shellcode executed ```pushad``` and ```pushfd``` as explained in step 3, with . This is where ESPs from point 4 and 7 comes in to play*```add esp, <ESP_POST_SHELLCODE - ESP_PRE_SHELLCODE>```
+
+*8. Restore registers with ```popfd``` and ```popad```*
+
 
 
 
