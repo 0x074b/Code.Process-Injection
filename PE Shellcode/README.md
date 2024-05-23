@@ -48,7 +48,16 @@
 ## i
 *In the above screenshot,  and  are the first instructions at 4d8000 - it's not shown in this lab how those two instructions were inserted there, but there is no magic  - just add   bytes  before the shellcode at 0xCD200 in the bginfo and you're set.* ```pushad pushdf 60 9c```
 
+# Redirecting Code Execution Flow
+*In previous paragraph we confirmed the shellcode can be executed, but we did this manually, with help of a debugger. Now let's patch the binary, so that the process is automated and does not require our intervention.*
 
+*The process of patching the binary to redirect the code execution flow is as follows:*
+
+*1. Find the first instruction that is 5 bytes in size inside the bginfo.exe binary*  
+  *1. We will overwrite this instruction with a jump to the shellcode as explained in step 2*
+  *2. Prior to overwriting this instruction, write it down somewhere - we will need to append it to our shellcode later in order to restore the code   execution flow*
+  *2. Write down the address of the next instruction to be executed next - after the shellcode has been executed, stack and registers restored, we     will jump back to this address to let the bginfo.exe continue as normal*
+*2. Overwrite the instruction in step 1 with a jump to the shellcode at 4D8000‬*
 
 
 
