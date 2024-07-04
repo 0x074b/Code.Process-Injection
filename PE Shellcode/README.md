@@ -113,10 +113,70 @@ If we try running the patched binary now, we can see it results in a reverse she
 
 # Patching Shellcode
 
+## Patching WaitForSingleObject
 
+The reason the bginfo.exe is not showing any UI is because the thread is blocked by the shellcode call to ```WaitForSingleObject``` function (see definition below). It's called with an argument ```INFINITE``` (-1 or 0xFFFFFFFF‬), meaning the thread will be blocked forever.
 
+```WaitForSingleObject``` definition:
+```
+DWORD WaitForSingleObject(
+  HANDLE hHandle,
+  DWORD  dwMilliseconds
+);
+```
 
+The below screenshot shows that EAX points to ```WaitForSingleObject``` which is going to be jumped to with ```jmp eax``` at 004d8081. Note the stack - it contains the thread handle (28c) to block and the wait time FFFFFFFF == INFINITE which is the second argument for ```WaitForSingleObject```:
 
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/9d1461ce-d590-4127-bbee-47b520af4283)
 
+Instruction ```dec esi``` at 004d811b changes ESI value to -1 (currently ESI = 0), which is the value pushed to the stack as an argument ```dwMilliSeconds``` for ```WaitForSignaledObject```:
 
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/4a356210-494b-41de-b357-58ed7ccf1a1a)
 
+Let's NOP that instruction, so that ESI stays unchanged at 0, which means that ```WaitForSingleObject``` will wait 0 seconds before unblocking the UI:
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/c2ca7122-80c2-4bdf-a3e1-f45acc716f79)
+
+## Restoring Stack Frame & Jumping Back
+
+Next, we need to patch the ```call ebp``` instruction at 004d8144 if we don't want the shellcode to close the bginfo.exe process:
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/2365da84-5fd0-4dd8-8520-bc2f3ffceaf4)
+
+We will do this by replacing this instruction with an instruction that will restore our stack frame pointer ESP to what it was before we started executing our shellcode, but after we executed ```pushad``` and ```pushfd``` instructions as mentioned in point 7.
+
+From earlier, the ```ESP``` after ```pushad``` and ```pushfd``` was ```0019ff30```:
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/a8cfa19e-579b-4890-bb55-1f4473da2659)
+
+```ESP``` after executing the shellcode was ```0019fd2c```:
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/e52ffe96-fa39-4193-9f78-0db2e8a56f13)
+
+Which means that the stack grew by 204h bytes:
+
+![Capture d'écran 2024-07-04 231553](https://github.com/0x074b/Code-Process_Injection/assets/83349783/3924a807-ea4e-4e0e-b3d7-e4ecf249051e)
+
+<ul>
+  <li>Knowing all of the above, we need to:</li>
+  <ul>
+    <li>restore the stack by increasing the ESP by 0x204 bytes</li>
+    <li>restore registers and flags with <em><strong>popfd</strong></em> and <em><strong>popad</strong></em></li>
+    <li>re-introduce the instruction we previously had overwritten with a jump to our shellcode</li>
+    <li>jump back to the next instruction after the overwritten instruction that made the jump to the shellcode</li>
+  </ul>
+</ul>
+
+All the above steps in assembly would be:
+
+```
+add esp, 0x204
+popfd
+popad
+mov edi, 0xbb40e64e
+jmp 0x00467B2E
+```
+
+The below screenshot shows the very end of the shellcode with the above instructions encircled:
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/ae151b44-8cfb-4e38-9ad0-2bb975cabe19)
