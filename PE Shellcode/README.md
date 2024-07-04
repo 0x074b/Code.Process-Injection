@@ -50,7 +50,7 @@ When debugging the binary, if we set the EIP to point to 4D8000‬ and let the d
 
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/d44f53e6-c25d-4a24-a435-a995e5b17d8d)
 
-## i
+## ℹ️
 In the above screenshot, ```pushad``` and ```pushfd``` are the first instructions at 4d8000 - it's not shown in this lab how those two instructions were inserted there, but there is no magic  - just add ```60 9c``` bytes  before the shellcode at 0xCD200 in the bginfo and you're set.
 
 # Redirecting Code Execution Flow
@@ -87,7 +87,7 @@ The process of patching the binary to redirect the code execution flow is as fol
 Let's now hijack the bginfo.exe code execution flow by overwriting any instruction that is 5 bytes in size - again - this is how many bytes we need for a ```jmp address``` instruction.
 
 One of the first 5-byte instructions we can see is ```mov edi, bb40e64e``` at 00467b29:  
-/!\ Important
+⚠️ Important
 We are about to overwrite the instruction ```mov edi, 0xbb40e64e``` at 00467b29, hence we need to remember it for later as explained in 1.2.
 
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/7214612e-9786-4419-b82c-a822d84465d3)
@@ -96,7 +96,7 @@ Let's overwrite the instruction at 00467b29 with an instruction ```jmp 0x004d800
 
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/894398fd-0cbd-4ae9-a1c4-06214b66d6fd)
 
-/!\ Important
+⚠️ Important
 Remember the address of the next instruction after 0046b29, which is 0467b2e - this is the address we will jump back after the shellcode has executed in order to resume bginfo.
 
 There are multiple ways to overwrite the instructions at 00467b29 - either assemble the bytes using a debugger or patch the binary via a hex editor which is what I did. I found the bytes ```bf 4e e6 40 bb``` (bytes found at 00467b29 when bginfo is in memory) in the bginfo.exe (screenshot below) and replaced them with bytes ```e9 d2 04 07 00``` which translates to jmp ```bgfinfo.d48000``` (jump to our shellcode, above screenshot).
