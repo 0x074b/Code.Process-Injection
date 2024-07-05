@@ -1,7 +1,16 @@
 # Table of Contents  
 
-
-
+- [Backdooring PE Files with Shellcode](#backdooring-pe-files-with-shellcode)
+- [Generate Shellcode](#generate-shellcode)
+- [New PE Code Section](#new-pe-code-section)
+- [Inserting Shellcode](#inserting-shellcode)
+- [Testing the Shellcode](#testing-the-shellcode)
+- [Redirecting Code Execution Flow](#redirecting-code-execution-flow)
+- [Overwriting 5 byte Instruction](#overwriting-5-byte-instruction)
+- [Patching Shellcode](#patching-shellcode)
+  * [Patching WaitForSingleObject](#patching-waitforsingleobject)
+  * [Restoring Stack Frame & Jumping Back](#restoring-stack-frame---jumping-back)
+- [Backdoor Demo](#backdoor-demo)
 
 # Backdooring PE Files with Shellcode
 The purpose of this lab is to learn the Portable Executable (PE) backdooring technique by adding a new readable/writable/executable code section with our malicious shellcode to any portable executable file.
