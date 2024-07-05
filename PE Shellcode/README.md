@@ -1,10 +1,4 @@
 # Table of Contents  
-[Backdooring PE Files with Shellcode](#Backdooring_PE_Files_with_Shellcode)
-[Generate Shellcode](#Generate_Shellcode)
-
-
-<a href="#Backdooring PE Files with_Shellcode"/>
-<a href="#Generate Shellcode"/>
 
 
 
