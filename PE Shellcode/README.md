@@ -1,3 +1,13 @@
+##### Table of Contents  
+[Headers](#headers)   
+   
+<a name="headers"/>
+## Headers
+
+
+
+
+
 # Backdooring PE Files with Shellcode
 The purpose of this lab is to learn the Portable Executable (PE) backdooring technique by adding a new readable/writable/executable code section with our malicious shellcode to any portable executable file.
 
