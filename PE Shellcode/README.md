@@ -1,7 +1,8 @@
 # Table of Contents  
-[Headers](#Headers)   
-<a name="Headers"/>
-
+<li>[Backdooring PE Files with Shellcode](#Backdooring_PE_Files_with_Shellcode)</li>
+[Generate Shellcode](#Generate_Shellcode)
+<a name="Backdooring_PE_Files_with_Shellcode"/>
+<a name="Generate_Shellcode"/>
 
 
 
@@ -133,7 +134,7 @@ DWORD WaitForSingleObject(
   DWORD  dwMilliseconds
 );
 ```
-## Headers
+
 The below screenshot shows that EAX points to ```WaitForSingleObject``` which is going to be jumped to with ```jmp eax``` at 004d8081. Note the stack - it contains the thread handle (28c) to block and the wait time FFFFFFFF == INFINITE which is the second argument for ```WaitForSingleObject```:
 
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/9d1461ce-d590-4127-bbee-47b520af4283)
