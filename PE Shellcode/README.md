@@ -50,8 +50,8 @@ When debugging the binary, if we set the EIP to point to 4D8000‬ and let the d
 
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/d44f53e6-c25d-4a24-a435-a995e5b17d8d)
 
-## ℹ️ information
-In the above screenshot, ```pushad``` and ```pushfd``` are the first instructions at 4d8000 - it's not shown in this lab how those two instructions were inserted there, but there is no magic  - just add ```60 9c``` bytes  before the shellcode at 0xCD200 in the bginfo and you're set.
+> [!NOTE]
+> In the above screenshot, ```pushad``` and ```pushfd``` are the first instructions at 4d8000 - it's not shown in this lab how those two instructions were inserted there, but there is no magic  - just add ```60 9c``` bytes  before the shellcode at 0xCD200 in the bginfo and you're set.
 
 # Redirecting Code Execution Flow
 In previous paragraph we confirmed the shellcode can be executed, but we did this manually, with help of a debugger. Now let's patch the binary, so that the process is automated and does not require our intervention.
