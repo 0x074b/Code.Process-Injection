@@ -93,7 +93,7 @@ We are about to overwrite the instruction ```mov edi, 0xbb40e64e``` at 00467b29,
 
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/7214612e-9786-4419-b82c-a822d84465d3)
 
-Let's overwrite the instruction at 00467b29 with an instruction ```jmp 0x004d8000````which will make the bginfo jump to our shellcode located at 0x004d8000 when executed:
+Let's overwrite the instruction at 00467b29 with an instruction ```jmp 0x004d8000``` which will make the bginfo jump to our shellcode located at 0x004d8000 when executed:
 
 ![image](https://github.com/0x074b/Code-Process_Injection/assets/83349783/894398fd-0cbd-4ae9-a1c4-06214b66d6fd)
 
