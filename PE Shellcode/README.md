@@ -3,8 +3,8 @@
 [Generate Shellcode](#Generate_Shellcode)
 
 
-<li><a name="Backdooring PE Files with_Shellcode"/></li>
-<li><a name="Generate Shellcode"/></li>
+<a href="#Backdooring PE Files with_Shellcode"/>
+<a href="#Generate Shellcode"/>
 
 
 
