@@ -14,11 +14,11 @@ This lab looks at the APC (Asynchronous Procedure Calls) queue code injection.
 
 Some simplified context around threads and APC queues:
 
-<ol>
+<ul>
  <li>Threads execute code within processes</li>
  <li>Threads can execute code asynchronously by leveraging APC queues</li>
  <li>Each thread has a queue that stores all the APCs</li>
  <li>Application can queue an APC to a given thread (subject to privileges)</li>
  <li>When a thread is scheduled, queued APCs get executed</li>
  <li>Disadvantage of this technique is that the malicious program cannot force the victim thread to execute the injected code - the thread to which an APC was queued to, needs to enter/be in an alertable state (i.e SleepEx)</li>
-</ol>
+</ul>
